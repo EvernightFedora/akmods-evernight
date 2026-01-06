@@ -2,7 +2,7 @@
 ## (rpmautospec version 0.8.3)
 ## RPMAUTOSPEC: autorelease, autochangelog
 %define autorelease(e:s:pb:n) %{?-p:0.}%{lua:
-    release_number = 3;
+    release_number = 1;
     base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
     print(release_number + base_release_number - 1);
 }%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{!?-n:%{?dist}}
@@ -35,7 +35,7 @@ Source16:       cacert.config.in
 Source17:       akmods-kmodgenca
 Source18:       akmods-keygen.target
 Source19:       akmods-keygen@.service
-Source20:       %{name}-tmpfiles.conf
+Source20:       akmods-tmpfiles.conf
 Source21:       akmods.sysusers.conf
 
 BuildArch:      noarch
@@ -51,6 +51,7 @@ Requires:       %{_bindir}/time
 
 # Conflict with original akmods
 Conflicts:     akmods
+Provides:      akmods
 
 # needed for actually building kmods:
 Requires:       %{_bindir}/rpmdev-vercmp
@@ -113,14 +114,14 @@ cp -p %{SOURCE9} %{SOURCE10} %{SOURCE15} .
 
 
 %install
-mkdir -p %{buildroot}%{_usrsrc}/%{name} \
+mkdir -p %{buildroot}%{_usrsrc}/akmods \
          %{buildroot}%{_sbindir} \
          %{buildroot}%{_sysconfdir}/rpm \
          %{buildroot}%{_sysconfdir}/pki/%{name}/certs \
          %{buildroot}%{_sysconfdir}/pki/%{name}/private \
          %{buildroot}%{_sysconfdir}/kernel/postinst.d \
          %{buildroot}%{_sysconfdir}/logrotate.d \
-         %{buildroot}%{_localstatedir}/cache/%{name} \
+         %{buildroot}%{_localstatedir}/cache/akmods \
          %{buildroot}%{_localstatedir}/log/%{name} \
          %{buildroot}%{_tmpfilesdir}
 
@@ -130,7 +131,7 @@ install -pm 0755 %{SOURCE12} %{buildroot}%{_sbindir}/
 install -pm 0644 %{SOURCE14} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 install -pm 0640 %{SOURCE16} %{buildroot}%{_sysconfdir}/pki/%{name}/
 install -pm 0755 %{SOURCE17} %{buildroot}%{_sbindir}/kmodgenca
-install -pm 0644 %{SOURCE20} %{buildroot}%{_tmpfilesdir}/%{name}.conf
+install -pm 0644 %{SOURCE20} %{buildroot}%{_tmpfilesdir}/akmods.conf
 install -dpm 0770 %{buildroot}%{_rundir}/%{name}/
 
 mkdir -p %{buildroot}%{_prefix}/lib/kernel/install.d
@@ -197,7 +198,7 @@ install -m0644 -D %{SOURCE21} %{buildroot}%{_sysusersdir}/akmods.conf
 %attr(0644,root,root) %{_unitdir}/akmods-keygen.target
 %attr(0644,root,root) %{_unitdir}/akmods-keygen@.service
 %dir %attr(0770,root,akmods) %{_rundir}/%{name}
-%{_tmpfilesdir}/%{name}.conf
+%{_tmpfilesdir}/akmods.conf
 # akmods was enabled in the default preset by f28
 %if 0%{?rhel}
 %{_presetdir}/95-akmods.preset
