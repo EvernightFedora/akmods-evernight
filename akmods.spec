@@ -2,7 +2,7 @@
 ## (rpmautospec version 0.8.3)
 ## RPMAUTOSPEC: autorelease, autochangelog
 %define autorelease(e:s:pb:n) %{?-p:0.}%{lua:
-    release_number = 2;
+    release_number = 3;
     base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
     print(release_number + base_release_number - 1);
 }%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{!?-n:%{?dist}}
@@ -121,22 +121,22 @@ cp -p %{SOURCE9} %{SOURCE10} %{SOURCE15} .
 mkdir -p %{buildroot}%{_usrsrc}/akmods \
          %{buildroot}%{_sbindir} \
          %{buildroot}%{_sysconfdir}/rpm \
-         %{buildroot}%{_sysconfdir}/pki/%{name}/certs \
-         %{buildroot}%{_sysconfdir}/pki/%{name}/private \
+         %{buildroot}%{_sysconfdir}/pki/akmods/certs \
+         %{buildroot}%{_sysconfdir}/pki/akmods/private \
          %{buildroot}%{_sysconfdir}/kernel/postinst.d \
          %{buildroot}%{_sysconfdir}/logrotate.d \
          %{buildroot}%{_localstatedir}/cache/akmods \
-         %{buildroot}%{_localstatedir}/log/%{name} \
+         %{buildroot}%{_localstatedir}/log/akmods \
          %{buildroot}%{_tmpfilesdir}
 
 install -pm 0755 %{SOURCE1} %{buildroot}%{_sbindir}/
 install -pm 0755 %{SOURCE2} %{buildroot}%{_sbindir}/
 install -pm 0755 %{SOURCE12} %{buildroot}%{_sbindir}/
-install -pm 0644 %{SOURCE14} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -pm 0640 %{SOURCE16} %{buildroot}%{_sysconfdir}/pki/%{name}/
+install -pm 0644 %{SOURCE14} %{buildroot}%{_sysconfdir}/logrotate.d/akmods
+install -pm 0640 %{SOURCE16} %{buildroot}%{_sysconfdir}/pki/akmods/
 install -pm 0755 %{SOURCE17} %{buildroot}%{_sbindir}/kmodgenca
 install -pm 0644 %{SOURCE20} %{buildroot}%{_tmpfilesdir}/akmods.conf
-install -dpm 0770 %{buildroot}%{_rundir}/%{name}/
+install -dpm 0770 %{buildroot}%{_rundir}/akmods/
 
 mkdir -p %{buildroot}%{_prefix}/lib/kernel/install.d
 install -pm 0755 %{SOURCE13} %{buildroot}%{_prefix}/lib/kernel/install.d/
@@ -190,10 +190,10 @@ install -m0644 -D %{SOURCE21} %{buildroot}%{_sysusersdir}/akmods.conf
 %{_sbindir}/akmods
 %{_sbindir}/akmods-ostree-post
 %{_sbindir}/kmodgenca
-%dir %attr(750,root,akmods) %{_sysconfdir}/pki/%{name}/certs
-%dir %attr(750,root,akmods) %{_sysconfdir}/pki/%{name}/private
-%config(noreplace) %attr(640,root,akmods) %{_sysconfdir}/pki/%{name}/cacert.config.in
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%dir %attr(750,root,akmods) %{_sysconfdir}/pki/akmods/certs
+%dir %attr(750,root,akmods) %{_sysconfdir}/pki/akmods/private
+%config(noreplace) %attr(640,root,akmods) %{_sysconfdir}/pki/akmods/cacert.config.in
+%config(noreplace) %{_sysconfdir}/logrotate.d/akmods
 %{_unitdir}/akmods.service
 %{_unitdir}/akmods@.service
 %{_sbindir}/akmods-shutdown
@@ -201,7 +201,7 @@ install -m0644 -D %{SOURCE21} %{buildroot}%{_sysusersdir}/akmods.conf
 %{_prefix}/lib/kernel/install.d/95-akmodsposttrans.install
 %attr(0644,root,root) %{_unitdir}/akmods-keygen.target
 %attr(0644,root,root) %{_unitdir}/akmods-keygen@.service
-%dir %attr(0770,root,akmods) %{_rundir}/%{name}
+%dir %attr(0770,root,akmods) %{_rundir}/akmods
 %{_tmpfilesdir}/akmods.conf
 # akmods was enabled in the default preset by f28
 %if 0%{?rhel}
@@ -211,7 +211,7 @@ install -m0644 -D %{SOURCE21} %{buildroot}%{_sysusersdir}/akmods.conf
 %endif
 %{_usrsrc}/akmods
 %dir %attr(-,akmods,akmods) %{_localstatedir}/cache/akmods
-%dir %attr(0775,root,akmods) %{_localstatedir}/log/%{name}
+%dir %attr(0775,root,akmods) %{_localstatedir}/log/akmods
 %{_mandir}/man1/*
 %{_sysusersdir}/akmods.conf
 
