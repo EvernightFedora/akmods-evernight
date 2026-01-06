@@ -590,6 +590,9 @@ check_kmods()
 
 myprog_help ()
 {
+	echo "Evernight Vista akmod package tool"
+	echo "(c) 2026 EvernightFedora All Rights Reserved."
+	echo
 	echo "Checks the akmod packages and rebuilds them if needed"
 	echo $'\n'"Usage: ${myprog} [OPTIONS]"
 	echo $'\n'"Options:"
