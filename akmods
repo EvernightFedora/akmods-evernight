@@ -35,6 +35,12 @@
 # - check on shutdown if akmods is still running and let it finish before continuing
 # - make it configurable if kmods from the repo replace local ones
 
+# Fix Compile Errors
+export LLVM=1
+export CC=clang
+export CXX=clang++
+export LD=ld.lld
+
 # global vars
 myprog="akmods"
 myver="0.6.2"
